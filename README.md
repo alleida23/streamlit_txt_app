@@ -32,11 +32,11 @@ The CSV download button generates a new CSV file name based on the date pattern 
 ## Requirements
 The app uses the following Python libraries:
 
-Streamlit
-Pandas
-re
-tempfile
-os
+- Streamlit
+- Pandas
+- re
+- tempfile
+- os
 
 ## Limitations
 The app assumes that the uploaded TXT file follows a specific format. Make sure your file adheres to the required pattern.
