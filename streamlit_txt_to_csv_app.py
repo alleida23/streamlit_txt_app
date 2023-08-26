@@ -36,7 +36,12 @@ if st.button("Convert"):
         # Processed DataFrame
         column_names = ["Account", "Descripción", "Cuenta_Total", "Saldo Inicial", "Actividad Período", "Saldo Final"]
         df = pd.DataFrame(data, columns=column_names)
+        # Create new columns
         df['Compañía'] = ''
+        df['Num Centro'] = ''
+        df['Cuenta'] = ''
+        df['Subcuenta'] = ''
+        # Fill new columns with data from 'Cuenta_total'
         for row in range(len(df)):
             df['Compañía'][row] = df['Cuenta_Total'][row][:4]
             df['Num Centro'][row] = df['Cuenta_Total'][row][5:12]
