@@ -11,15 +11,6 @@ This is a simple Streamlit app that converts a specific format TXT file into a C
 4. If the TXT file has the correct pattern, it will be processed and converted into a CSV file.
 5. The CSV file will be available for download with the name based on the date in the TXT file.
 
-## Installation
-
-To run the app locally, follow these steps:
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/your-username/your-repo.git
-
 ## App Workflow
 The app begins with a title and a file uploader to upload the TXT file.
 
@@ -31,13 +22,29 @@ New columns are created, filled, and formatted in the DataFrame.
 
 The processed data is saved as a CSV file, which can be downloaded using the "Download CSV" button.
 
+## Code Details
+The code has been updated to include the following:
+
+A function cleanup_temp_file() is used to delete the temporary CSV file after it's no longer needed.
+The uploaded TXT file's content is cleaned from memory using del content to free up resources.
+The CSV download button generates a new CSV file name based on the date pattern found in the TXT content.
+
 ## Requirements
 The app uses the following Python libraries:
 
 Streamlit
 Pandas
 re
+tempfile
+os
 
-##Limitations
+## Limitations
 The app assumes that the uploaded TXT file follows a specific format. Make sure your file adheres to the required pattern.
+
 The app processes files based on regular expressions. If the pattern is not detected correctly, the conversion might fail.
+
+Ensure that you have enough disk space and memory available for processing and generating CSV files.
+
+Remember that the app creates temporary files during the conversion process. These files are cleaned up, but make sure you have the necessary permissions and resources for this.
+
+For further assistance or issues, please consult the Streamlit documentation or seek support from the app's developer.
