@@ -74,6 +74,9 @@ if st.button("Convert"):
                 temp_file.write(csv_content)
                 temp_file_path = temp_file.name
 
+            # Clean up uploaded file content from memory
+            del content  # Add this line to remove the content from memory
+
             # Function to clean up temporary file
             def cleanup_temp_file():
                 os.remove(temp_file_path)
