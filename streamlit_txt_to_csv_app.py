@@ -58,11 +58,6 @@ if st.button("Convert"):
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
 
-        # Convert currency columns to float
-        df['Saldo Inicial'] = (df['Saldo Inicial'].str.replace('[,.]', '', regex=True).astype(float)) / 100
-        df['Actividad Período'] = (df['Actividad Período'].str.replace('[,.]', '', regex=True).astype(float)) / 100
-        df['Saldo Final'] = (df['Saldo Final'].str.replace('[,.]', '', regex=True).astype(float)) / 100
-
         # Search for date pattern in TXT content
         match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
 
@@ -80,7 +75,6 @@ if st.button("Convert"):
                 temp_file_path = temp_file.name
 
             # Function to clean up temporary file
-            @st.cache
             def cleanup_temp_file():
                 os.remove(temp_file_path)
 
