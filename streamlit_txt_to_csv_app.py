@@ -12,12 +12,17 @@ uploaded_file = st.file_uploader("Upload a TXT File", type=["txt"])
 
 # Convert button
 if st.button("Convert"):
+
+    # If file is uploaded
     if uploaded_file is not None:
+        
         # Read the content of the uploaded TXT file
         content = uploaded_file.read().decode("utf-8")
 
         # Parse data from TXT content and process it
-        data = []
+        data = [] # Empty list to store data from the file
+
+        # Extract data
         for line in content.splitlines():
             line = line.strip()
             if re.match(r"^\d{4}", line):
@@ -36,6 +41,7 @@ if st.button("Convert"):
                 actividad_periodo = parts[2]
                 saldo_final = parts[3]
 
+                # Append extracted data to 'data' empty list
                 data.append([account, description, cuenta, saldo_inicial, actividad_periodo, saldo_final])
 
         # Create DataFrame from parsed data
@@ -47,6 +53,7 @@ if st.button("Convert"):
         df['Num Centro'] = ''
         df['Cuenta'] = ''
         df['Subcuenta'] = ''
+        
         for row in range(len(df)):
             df['Compañía'][row] = df['Cuenta_Total'][row][:4]
             df['Num Centro'][row] = df['Cuenta_Total'][row][5:12]
