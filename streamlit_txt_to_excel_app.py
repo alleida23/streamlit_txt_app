@@ -37,19 +37,16 @@ if st.button("Convert"):
                 actividad_periodo = parts[2]
                 saldo_final = parts[3]
 
-                 # Convert punctuation format in 'Saldo Inicial', 'Actividad Período', and 'Saldo Final'
-                for row in data:
-                    row[3] = row[3].replace(".", "").replace(",", ".")
-                    row[4] = row[4].replace(".", "").replace(",", ".")
-                    row[5] = row[5].replace(".", "").replace(",", ".")
-
                 data.append([account, description, cuenta, saldo_inicial, actividad_periodo, saldo_final])
 
         # Create DataFrame from parsed data
         column_names = ["Account", "Descripción", "Cuenta_Total", "Saldo Inicial", "Actividad Período", "Saldo Final"]
         df = pd.DataFrame(data, columns=column_names)
 
-
+        # Convert 'Saldo Inicial', 'Actividad Período', and 'Saldo Final' columns and divide by 100 and format with "." for thousands and "," for decimals
+        df['Saldo Inicial'] = df['Saldo Inicial'].apply(lambda x: '{:,.2f}'.format(float(x) / 100).replace(",", "_").replace(".", ",").replace("_", "."))
+        df['Actividad Período'] = df['Actividad Período'].apply(lambda x: '{:,.2f}'.format(float(x) / 100).replace(",", "_").replace(".", ",").replace("_", "."))
+        df['Saldo Final'] = df['Saldo Final'].apply(lambda x: '{:,.2f}'.format(float(x) / 100).replace(",", "_").replace(".", ",").replace("_", "."))
 
         # Extract sub-components of Cuenta_Total and add as columns
         df['Compañía'] = ''
