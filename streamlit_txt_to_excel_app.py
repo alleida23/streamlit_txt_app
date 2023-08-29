@@ -3,7 +3,7 @@ import pandas as pd
 import re
 import tempfile
 import os
-import locale
+
 
 # Streamlit app title
 st.title("Trial Balance Data Converter")
@@ -37,11 +37,19 @@ if st.button("Convert"):
                 actividad_periodo = parts[2]
                 saldo_final = parts[3]
 
+                 # Convert punctuation format in 'Saldo Inicial', 'Actividad Período', and 'Saldo Final'
+                for row in data:
+                    row[3] = row[3].replace(".", "").replace(",", ".")
+                    row[4] = row[4].replace(".", "").replace(",", ".")
+                    row[5] = row[5].replace(".", "").replace(",", ".")
+
                 data.append([account, description, cuenta, saldo_inicial, actividad_periodo, saldo_final])
 
         # Create DataFrame from parsed data
         column_names = ["Account", "Descripción", "Cuenta_Total", "Saldo Inicial", "Actividad Período", "Saldo Final"]
         df = pd.DataFrame(data, columns=column_names)
+
+
 
         # Extract sub-components of Cuenta_Total and add as columns
         df['Compañía'] = ''
@@ -58,15 +66,6 @@ if st.button("Convert"):
         df = df.drop('Cuenta_Total', axis=1)
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
-
-        
-        # Set the locale to fr_FR for French formatting (dots for thousands, commas for decimals)
-        locale.setlocale(locale.LC_ALL, "fr_FR")
-
-        # Convert punctuation format using locale
-        saldo_inicial = locale.atof(saldo_inicial)
-        actividad_periodo = locale.atof(actividad_periodo)
-        saldo_final = locale.atof(saldo_final)
         
         # Search for date pattern in TXT content
         match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
