@@ -3,7 +3,7 @@ import pandas as pd
 import re
 import tempfile
 import os
-import openpyxl
+
 
 # Streamlit app title
 st.title("Trial Balance Data Converter")
@@ -49,10 +49,15 @@ if st.button("Convert"):
         df['Saldo Final'] = df['Saldo Final'].astype(float)
 
         # Extract sub-components of Cuenta_Total and add as columns
-        df['Compañía'] = df['Cuenta_Total'].str[:4]
-        df['Num Centro'] = df['Cuenta_Total'].str[5:12]
-        df['Cuenta'] = df['Cuenta_Total'].str[13:17]
-        df['Subcuenta'] = df['Cuenta_Total'].str[18:24]
+        df['Compañía'] = ''
+        df['Num Centro'] = ''
+        df['Cuenta'] = ''
+        df['Subcuenta'] = ''
+        for row in range(len(df)):
+            df['Compañía'][row] = df['Cuenta_Total'][row][:4]
+            df['Num Centro'][row] = df['Cuenta_Total'][row][5:12]
+            df['Cuenta'][row] = df['Cuenta_Total'][row][13:17]
+            df['Subcuenta'][row] = df['Cuenta_Total'][row][18:24]
 
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
@@ -61,37 +66,40 @@ if st.button("Convert"):
         df['Cuenta'] = df['Cuenta'].astype(str)
         df['Subcuenta'] = df['Subcuenta'].astype(str)
 
+
         # Drop unnecessary column and reorder columns
         df = df.drop('Cuenta_Total', axis=1)
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
+        
+        # Search for date pattern in TXT content
+        match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
 
-        # Generate EXCEL content
-        with tempfile.NamedTemporaryFile(delete=False, mode="wb", suffix=".xlsx") as temp_file:
-            excel_writer = pd.ExcelWriter(temp_file, engine='openpyxl')
-            df.to_excel(excel_writer, sheet_name='Sheet1', index=False)
-            excel_writer.save()
+        if match:
+            month = match.group(1)
+            year = match.group(2)
+            new_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}.xlsx"
 
-            temp_file_path = temp_file.name
+            # Generate EXCEL content
+            excel_content = df.to_csv(index=False)
 
-            # Open the saved workbook and worksheet using openpyxl
-            workbook = openpyxl.load_workbook(temp_file_path)
-            worksheet = workbook.active
+            # Create temporary file to store EXCEL content
+            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_file:
+                temp_file.write(excel_content)
+                temp_file_path = temp_file.name
 
-            # Set the column format to text for specified columns
-            text_format = openpyxl.styles.NumFmtFormat('@')
-            for col_num, column_title in enumerate(df.columns, start=1):
-                if column_title in ['Account', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta']:
-                    column_letter = openpyxl.utils.get_column_letter(col_num)
-                    for row_num in range(2, len(df) + 2):  # Start from row 2 (header is row 1)
-                        worksheet[f'{column_letter}{row_num}'].number_format = text_format
+            # Clean up uploaded file content from memory
+            del content 
 
-            workbook.save(temp_file_path)
+            # Function to clean up temporary file
+            def cleanup_temp_file():
+                os.remove(temp_file_path)
 
-        # Clean up uploaded file content from memory
-        del content
+            cleanup_temp_file()
 
-        # Provide download button for the EXCEL file
-        st.download_button("Download Excel", data=open(temp_file_path, 'rb').read(), file_name=new_file_name)
+            # Provide download button for the EXCEL file
+            st.download_button("Download Excel", data=excel_content, file_name=new_file_name)
+        else:
+            st.write("Pattern not found.")
     else:
         st.write("Upload a TXT file to convert.")
