@@ -48,10 +48,21 @@ if st.button("Convert"):
         df['Actividad Período'] = df['Actividad Período'].astype(float)
         df['Saldo Final'] = df['Saldo Final'].astype(float)
 
+        def format_number(num):
+            parts = '{:,.2f}'.format(num).split('.')
+            integer_part = parts[0].replace(',', '.')
+            decimal_part = parts[1]
+            return f'{integer_part},{decimal_part}'
+
         # Format columns with dots for thousands and a comma for decimals
-        df['Saldo Inicial'] = df['Saldo Inicial'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
-        df['Actividad Período'] = df['Actividad Período'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
-        df['Saldo Final'] = df['Saldo Final'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
+        df['Saldo Inicial'] = df['Saldo Inicial'].apply(format_number)
+        df['Actividad Período'] = df['Actividad Período'].apply(format_number)
+        df['Saldo Final'] = df['Saldo Final'].apply(format_number)
+        
+        # Format columns with dots for thousands and a comma for decimals
+        #df['Saldo Inicial'] = df['Saldo Inicial'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
+        #df['Actividad Período'] = df['Actividad Período'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
+        #df['Saldo Final'] = df['Saldo Final'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
 
         # Extract sub-components of Cuenta_Total and add as columns
         df['Compañía'] = ''
