@@ -43,10 +43,10 @@ if st.button("Convert"):
         column_names = ["Account", "Descripción", "Cuenta_Total", "Saldo Inicial", "Actividad Período", "Saldo Final"]
         df = pd.DataFrame(data, columns=column_names)
 
-        # Convert 'Saldo Inicial', 'Actividad Período', and 'Saldo Final' columns to float and divide by 100
-        df['Saldo Inicial'] = df['Saldo Inicial'].astype(float) / 100
-        df['Actividad Período'] = df['Actividad Período'].astype(float) / 100
-        df['Saldo Final'] = df['Saldo Final'].astype(float) / 100
+        # Convert 'Saldo Inicial', 'Actividad Período', and 'Saldo Final' columns to float
+        df['Saldo Inicial'] = df['Saldo Inicial'].astype(float)
+        df['Actividad Período'] = df['Actividad Período'].astype(float)
+        df['Saldo Final'] = df['Saldo Final'].astype(float)
 
         # Extract sub-components of Cuenta_Total and add as columns
         df['Compañía'] = ''
