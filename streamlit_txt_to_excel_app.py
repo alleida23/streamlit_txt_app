@@ -3,7 +3,7 @@ import pandas as pd
 import re
 import tempfile
 import os
-
+import xlsxwriter
 
 # Streamlit app title
 st.title("Trial Balance Data Converter")
@@ -49,15 +49,10 @@ if st.button("Convert"):
         df['Saldo Final'] = df['Saldo Final'].astype(float)
 
         # Extract sub-components of Cuenta_Total and add as columns
-        df['Compañía'] = ''
-        df['Num Centro'] = ''
-        df['Cuenta'] = ''
-        df['Subcuenta'] = ''
-        for row in range(len(df)):
-            df['Compañía'][row] = df['Cuenta_Total'][row][:4]
-            df['Num Centro'][row] = df['Cuenta_Total'][row][5:12]
-            df['Cuenta'][row] = df['Cuenta_Total'][row][13:17]
-            df['Subcuenta'][row] = df['Cuenta_Total'][row][18:24]
+        df['Compañía'] = df['Cuenta_Total'].str[:4]
+        df['Num Centro'] = df['Cuenta_Total'].str[5:12]
+        df['Cuenta'] = df['Cuenta_Total'].str[13:17]
+        df['Subcuenta'] = df['Cuenta_Total'].str[18:24]
 
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
@@ -66,12 +61,11 @@ if st.button("Convert"):
         df['Cuenta'] = df['Cuenta'].astype(str)
         df['Subcuenta'] = df['Subcuenta'].astype(str)
 
-
         # Drop unnecessary column and reorder columns
         df = df.drop('Cuenta_Total', axis=1)
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
-        
+
         # Search for date pattern in TXT content
         match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
 
@@ -81,11 +75,22 @@ if st.button("Convert"):
             new_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}.xlsx"
 
             # Generate EXCEL content
-            excel_content = df.to_csv(index=False)
+            with tempfile.NamedTemporaryFile(delete=False, mode="wb", suffix=".xlsx") as temp_file:
+                excel_writer = pd.ExcelWriter(temp_file, engine='xlsxwriter')
+                df.to_excel(excel_writer, sheet_name='Sheet1', index=False)
 
-            # Create temporary file to store EXCEL content
-            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_file:
-                temp_file.write(excel_content)
+                # Get the xlsxwriter workbook and worksheet objects
+                workbook = excel_writer.book
+                worksheet = excel_writer.sheets['Sheet1']
+
+                # Set the column format to text for specified columns
+                text_format = workbook.add_format({'num_format': '@'})
+                for col_num, column_title in enumerate(df.columns):
+                    if column_title in ['Account', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta']:
+                        worksheet.set_column(col_num, col_num, None, text_format)
+
+                excel_writer.save()
+
                 temp_file_path = temp_file.name
 
             # Clean up uploaded file content from memory
@@ -98,7 +103,7 @@ if st.button("Convert"):
             cleanup_temp_file()
 
             # Provide download button for the EXCEL file
-            st.download_button("Download Excel", data=excel_content, file_name=new_file_name)
+            st.download_button("Download Excel", data=open(temp_file_path, 'rb').read(), file_name=new_file_name)
         else:
             st.write("Pattern not found.")
     else:
