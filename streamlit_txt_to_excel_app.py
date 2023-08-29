@@ -3,6 +3,10 @@ import pandas as pd
 import re
 import tempfile
 import os
+import locale
+
+# Set the locale to fr_FR for French formatting (dots for thousands, commas for decimals)
+locale.setlocale(locale.LC_ALL, "fr_FR")
 
 # Streamlit app title
 st.title("Trial Balance Data Converter")
@@ -35,6 +39,11 @@ if st.button("Convert"):
                 saldo_inicial = parts[1]
                 actividad_periodo = parts[2]
                 saldo_final = parts[3]
+
+                # Convert punctuation format using locale
+                saldo_inicial = locale.atof(saldo_inicial)
+                actividad_periodo = locale.atof(actividad_periodo)
+                saldo_final = locale.atof(saldo_final)
 
                 data.append([account, description, cuenta, saldo_inicial, actividad_periodo, saldo_final])
 
