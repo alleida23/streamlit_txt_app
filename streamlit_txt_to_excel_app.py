@@ -48,6 +48,11 @@ if st.button("Convert"):
         df['Actividad Período'] = df['Actividad Período'].astype(float)
         df['Saldo Final'] = df['Saldo Final'].astype(float)
 
+        # Format columns with dots for thousands and a comma for decimals
+        df['Saldo Inicial'] = df['Saldo Inicial'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
+        df['Actividad Período'] = df['Actividad Período'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
+        df['Saldo Final'] = df['Saldo Final'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
+
         # Extract sub-components of Cuenta_Total and add as columns
         df['Compañía'] = ''
         df['Num Centro'] = ''
