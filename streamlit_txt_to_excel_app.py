@@ -12,17 +12,12 @@ uploaded_file = st.file_uploader("Upload a TXT File", type=["txt"])
 
 # Convert button
 if st.button("Convert"):
-
-    # If file is uploaded
     if uploaded_file is not None:
-        
         # Read the content of the uploaded TXT file
         content = uploaded_file.read().decode("utf-8")
 
         # Parse data from TXT content and process it
-        data = [] # Empty list to store data from the file
-
-        # Extract data
+        data = []
         for line in content.splitlines():
             line = line.strip()
             if re.match(r"^\d{4}", line):
@@ -41,7 +36,6 @@ if st.button("Convert"):
                 actividad_periodo = parts[2]
                 saldo_final = parts[3]
 
-                # Append extracted data to 'data' empty list
                 data.append([account, description, cuenta, saldo_inicial, actividad_periodo, saldo_final])
 
         # Create DataFrame from parsed data
@@ -53,7 +47,6 @@ if st.button("Convert"):
         df['Num Centro'] = ''
         df['Cuenta'] = ''
         df['Subcuenta'] = ''
-        
         for row in range(len(df)):
             df['Compañía'][row] = df['Cuenta_Total'][row][:4]
             df['Num Centro'][row] = df['Cuenta_Total'][row][5:12]
@@ -71,14 +64,14 @@ if st.button("Convert"):
         if match:
             month = match.group(1)
             year = match.group(2)
-            new_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}.csv"
+            new_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}.xlsx"
 
-            # Generate CSV content
-            csv_content = df.to_csv(index=False)
+            # Generate EXCEL content
+            excel_content = df.to_csv(index=False)
 
-            # Create temporary file to store CSV content
-            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".csv") as temp_file:
-                temp_file.write(csv_content)
+            # Create temporary file to store EXCEL content
+            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_file:
+                temp_file.write(excel_content)
                 temp_file_path = temp_file.name
 
             # Clean up uploaded file content from memory
@@ -90,8 +83,8 @@ if st.button("Convert"):
 
             cleanup_temp_file()
 
-            # Provide download button for the CSV file
-            st.download_button("Download CSV", data=csv_content, file_name=new_file_name)
+            # Provide download button for the EXCEL file
+            st.download_button("Download Excel", data=excel_content, file_name=new_file_name)
         else:
             st.write("Pattern not found.")
     else:
