@@ -48,16 +48,16 @@ if st.button("Convert"):
         df['Actividad Período'] = df['Actividad Período'].astype(float)
         df['Saldo Final'] = df['Saldo Final'].astype(float)
 
-        def format_number(num):
-            parts = '{:,.2f}'.format(num).split('.')
-            integer_part = parts[0].replace(',', '.')
-            decimal_part = parts[1]
-            return f'{integer_part},{decimal_part}'
+        #def format_number(num):
+        #    parts = '{:,.2f}'.format(num).split('.')
+        #    integer_part = parts[0].replace(',', '.')
+        #    decimal_part = parts[1]
+        #    return f'{integer_part},{decimal_part}'
 
         # Format columns with dots for thousands and a comma for decimals
-        df['Saldo Inicial'] = df['Saldo Inicial'].apply(format_number)
-        df['Actividad Período'] = df['Actividad Período'].apply(format_number)
-        df['Saldo Final'] = df['Saldo Final'].apply(format_number)
+        #df['Saldo Inicial'] = df['Saldo Inicial'].apply(format_number)
+        #df['Actividad Período'] = df['Actividad Período'].apply(format_number)
+        #df['Saldo Final'] = df['Saldo Final'].apply(format_number)
         
         # Format columns with dots for thousands and a comma for decimals
         #df['Saldo Inicial'] = df['Saldo Inicial'].apply(lambda x: '{:,.2f}'.format(x).replace(',', 'temp').replace('.', ',').replace('temp', '.'))
@@ -74,6 +74,14 @@ if st.button("Convert"):
             df['Num Centro'][row] = df['Cuenta_Total'][row][5:12]
             df['Cuenta'][row] = df['Cuenta_Total'][row][13:17]
             df['Subcuenta'][row] = df['Cuenta_Total'][row][18:24]
+
+        # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
+        df['Account'] = df['Account'].astype(str)
+        df['Compañía'] = df['Compañía'].astype(str)
+        df['Num Centro'] = df['Num Centro'].astype(str)
+        df['Cuenta'] = df['Cuenta'].astype(str)
+        df['Subcuenta'] = df['Subcuenta'].astype(str)
+
 
         # Drop unnecessary column and reorder columns
         df = df.drop('Cuenta_Total', axis=1)
