@@ -5,9 +5,6 @@ import tempfile
 import os
 import locale
 
-# Set the locale to fr_FR for French formatting (dots for thousands, commas for decimals)
-locale.setlocale(locale.LC_ALL, "fr_FR")
-
 # Streamlit app title
 st.title("Trial Balance Data Converter")
 
@@ -40,11 +37,6 @@ if st.button("Convert"):
                 actividad_periodo = parts[2]
                 saldo_final = parts[3]
 
-                # Convert punctuation format using locale
-                saldo_inicial = locale.atof(saldo_inicial)
-                actividad_periodo = locale.atof(actividad_periodo)
-                saldo_final = locale.atof(saldo_final)
-
                 data.append([account, description, cuenta, saldo_inicial, actividad_periodo, saldo_final])
 
         # Create DataFrame from parsed data
@@ -67,6 +59,15 @@ if st.button("Convert"):
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
 
+        
+        # Set the locale to fr_FR for French formatting (dots for thousands, commas for decimals)
+        locale.setlocale(locale.LC_ALL, "fr_FR")
+
+        # Convert punctuation format using locale
+        saldo_inicial = locale.atof(saldo_inicial)
+        actividad_periodo = locale.atof(actividad_periodo)
+        saldo_final = locale.atof(saldo_final)
+        
         # Search for date pattern in TXT content
         match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
 
