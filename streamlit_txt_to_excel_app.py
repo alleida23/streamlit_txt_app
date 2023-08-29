@@ -3,7 +3,7 @@ import pandas as pd
 import re
 import tempfile
 import os
-import xlsxwriter
+import openpyxl
 
 # Streamlit app title
 st.title("Trial Balance Data Converter")
@@ -66,45 +66,32 @@ if st.button("Convert"):
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
 
-        # Search for date pattern in TXT content
-        match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
+        # Generate EXCEL content
+        with tempfile.NamedTemporaryFile(delete=False, mode="wb", suffix=".xlsx") as temp_file:
+            excel_writer = pd.ExcelWriter(temp_file, engine='openpyxl')
+            df.to_excel(excel_writer, sheet_name='Sheet1', index=False)
+            excel_writer.save()
 
-        if match:
-            month = match.group(1)
-            year = match.group(2)
-            new_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}.xlsx"
+            temp_file_path = temp_file.name
 
-            # Generate EXCEL content
-            with tempfile.NamedTemporaryFile(delete=False, mode="wb", suffix=".xlsx") as temp_file:
-                excel_writer = pd.ExcelWriter(temp_file, engine='xlsxwriter')
-                df.to_excel(excel_writer, sheet_name='Sheet1', index=False)
+            # Open the saved workbook and worksheet using openpyxl
+            workbook = openpyxl.load_workbook(temp_file_path)
+            worksheet = workbook.active
 
-                # Get the xlsxwriter workbook and worksheet objects
-                workbook = excel_writer.book
-                worksheet = excel_writer.sheets['Sheet1']
+            # Set the column format to text for specified columns
+            text_format = openpyxl.styles.NumFmtFormat('@')
+            for col_num, column_title in enumerate(df.columns, start=1):
+                if column_title in ['Account', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta']:
+                    column_letter = openpyxl.utils.get_column_letter(col_num)
+                    for row_num in range(2, len(df) + 2):  # Start from row 2 (header is row 1)
+                        worksheet[f'{column_letter}{row_num}'].number_format = text_format
 
-                # Set the column format to text for specified columns
-                text_format = workbook.add_format({'num_format': '@'})
-                for col_num, column_title in enumerate(df.columns):
-                    if column_title in ['Account', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta']:
-                        worksheet.set_column(col_num, col_num, None, text_format)
+            workbook.save(temp_file_path)
 
-                excel_writer.save()
+        # Clean up uploaded file content from memory
+        del content
 
-                temp_file_path = temp_file.name
-
-            # Clean up uploaded file content from memory
-            del content 
-
-            # Function to clean up temporary file
-            def cleanup_temp_file():
-                os.remove(temp_file_path)
-
-            cleanup_temp_file()
-
-            # Provide download button for the EXCEL file
-            st.download_button("Download Excel", data=open(temp_file_path, 'rb').read(), file_name=new_file_name)
-        else:
-            st.write("Pattern not found.")
+        # Provide download button for the EXCEL file
+        st.download_button("Download Excel", data=open(temp_file_path, 'rb').read(), file_name=new_file_name)
     else:
         st.write("Upload a TXT file to convert.")
