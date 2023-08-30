@@ -54,10 +54,10 @@ if st.button("Convert"):
         df['Cuenta'] = ''
         df['Subcuenta'] = ''
         for row in range(len(df)):
-            df['Compañía'][row] = df['Cuenta_Total'][row][:4]
-            df['Num Centro'][row] = df['Cuenta_Total'][row][5:12]
-            df['Cuenta'][row] = df['Cuenta_Total'][row][13:17]
-            df['Subcuenta'][row] = df['Cuenta_Total'][row][18:24]
+            df.loc[row, 'Compañía'] = df.loc[row, 'Cuenta_Total'][:4]
+            df.loc[row, 'Num Centro'] = df.loc[row, 'Cuenta_Total'][5:12]
+            df.loc[row, 'Cuenta'] = df.loc[row, 'Cuenta_Total'][13:17]
+            df.loc[row, 'Subcuenta'] = df.loc[row, 'Cuenta_Total'][18:24]
 
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
