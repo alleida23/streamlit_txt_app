@@ -44,9 +44,9 @@ if st.button("Convert"):
         df = pd.DataFrame(data, columns=column_names)
 
         # Convert 'Saldo Inicial', 'Actividad Período', and 'Saldo Final' columns to float
-        df['Saldo Inicial'] = df['Saldo Inicial'].str.replace(',', '').astype(float) / 100
-        df['Actividad Período'] = df['Actividad Período'].str.replace(',', '').astype(float) / 100
-        df['Saldo Final'] = df['Saldo Final'].str.replace(',', '').astype(float) / 100
+        df['Saldo Inicial'] = df['Saldo Inicial'].str.replace(',', '').astype(float)
+        df['Actividad Período'] = df['Actividad Período'].str.replace(',', '').astype(float)
+        df['Saldo Final'] = df['Saldo Final'].str.replace(',', '').astype(float)
 
         # Extract sub-components of Cuenta_Total and add as columns
         df['Compañía'] = ''
