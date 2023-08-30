@@ -4,7 +4,6 @@ import re
 import tempfile
 import os
 
-
 # Streamlit app title
 st.title("Trial Balance Data Converter")
 
@@ -66,39 +65,46 @@ if st.button("Convert"):
         df['Cuenta'] = df['Cuenta'].astype(str)
         df['Subcuenta'] = df['Subcuenta'].astype(str)
 
-
         # Drop unnecessary column and reorder columns
         df = df.drop('Cuenta_Total', axis=1)
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
-        
+
         # Search for date pattern in TXT content
         match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
 
         if match:
             month = match.group(1)
             year = match.group(2)
-            new_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}.xlsx"
+            base_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}"
 
             # Generate EXCEL content
             excel_content = df.to_csv(index=False)
 
-            # Create temporary file to store EXCEL content
-            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_file:
-                temp_file.write(excel_content)
-                temp_file_path = temp_file.name
+            # Generate CSV content
+            csv_content = df.to_csv(index=False)
+
+            # Create temporary files to store EXCEL and CSV content
+            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_xlsx_file, \
+                 tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".csv") as temp_csv_file:
+                temp_xlsx_file.write(excel_content)
+                temp_csv_file.write(csv_content)
+                temp_xlsx_file_path = temp_xlsx_file.name
+                temp_csv_file_path = temp_csv_file.name
 
             # Clean up uploaded file content from memory
-            del content 
+            del content
 
-            # Function to clean up temporary file
-            def cleanup_temp_file():
-                os.remove(temp_file_path)
+            # Function to clean up temporary files
+            def cleanup_temp_files():
+                os.remove(temp_xlsx_file_path)
+                os.remove(temp_csv_file_path)
 
-            cleanup_temp_file()
+            cleanup_temp_files()
 
-            # Provide download button for the EXCEL file
-            st.download_button("Download Excel", data=excel_content, file_name=new_file_name)
+            # Provide download buttons for the EXCEL and CSV files
+            st.download_button("Download Excel", data=excel_content, file_name=f"{base_file_name}.xlsx")
+            st.download_button("Download CSV", data=csv_content, file_name=f"{base_file_name}.csv")
         else:
             st.write("Pattern not found.")
     else:
