@@ -56,7 +56,6 @@ if st.button("Convert"):
             df.loc[row, 'Compañía'] = df.loc[row, 'Cuenta_Total'][:4]
             df.loc[row, 'Num Centro'] = df.loc[row, 'Cuenta_Total'][5:12]
             df.loc[row, 'Cuenta'] = df.loc[row, 'Cuenta_Total'][13:17]
-            # Extract and convert to integer
             df.loc[row, 'Subcuenta'] = df.loc[row, 'Cuenta_Total'][18:24]
             
         # Original df length
@@ -72,10 +71,10 @@ if st.button("Convert"):
         # Drop rows from 'Subcuenta' column with specific values
         specific_values_to_drop = ['184812', '184650', '184902', '184716', '184760', '184761']
         initial_rows_subcuenta = df.shape[0]
-        #df = df[~df['Subcuenta'].astype(int).isin(specific_values_to_drop)]
         df = df[~df['Subcuenta'].isin(specific_values_to_drop)]
         dropped_rows_subcuenta = initial_rows_subcuenta - df.shape[0]
         st.write(f"Eliminated {dropped_rows_subcuenta} accounting entries for 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}.")
+
 
         # Final df length after dropping rows
         final_length = len(df)
