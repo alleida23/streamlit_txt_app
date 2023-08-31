@@ -58,6 +58,19 @@ if st.button("Convert"):
             df.loc[row, 'Cuenta'] = df.loc[row, 'Cuenta_Total'][13:17]
             df.loc[row, 'Subcuenta'] = df.loc[row, 'Cuenta_Total'][18:24]
 
+        # Drop rows from 'Account' column with values >= 5000
+        initial_rows_account = df.shape[0]
+        df = df[df['Account'].astype(int) < 5000]
+        dropped_rows_account = initial_rows_account - df.shape[0]
+        st.write(f"Eliminated {dropped_rows_account} accounting entries where 'Account' <= 5000.")
+
+        # Drop rows from 'Subcuenta' column with specific values
+        specific_values_to_drop = [184812, 184650, 184902, 184716, 184760, 184761]
+        initial_rows_subcuenta = df.shape[0]
+        df = df[~df['Subcuenta'].astype(int).isin(specific_values_to_drop)]
+        dropped_rows_subcuenta = initial_rows_subcuenta - df.shape[0]
+        st.write(f"Eliminated {dropped_rows_subcuenta} accounting entries for 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}.")
+
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
         df['Compañía'] = df['Compañía'].astype(str)
@@ -79,32 +92,26 @@ if st.button("Convert"):
             base_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}"
 
             # Generate EXCEL content
-            excel_content = df.to_csv(index=False)
+            excel_path = os.path.join(tempfile.gettempdir(), f"{base_file_name}.xlsx")
+            df.to_excel(excel_path, index=False)
 
             # Generate CSV content
-            csv_content = df.to_csv(index=False)
-
-            # Create temporary files to store EXCEL and CSV content
-            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_xlsx_file, \
-                 tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".csv") as temp_csv_file:
-                temp_xlsx_file.write(excel_content)
-                temp_csv_file.write(csv_content)
-                temp_xlsx_file_path = temp_xlsx_file.name
-                temp_csv_file_path = temp_csv_file.name
+            csv_path = os.path.join(tempfile.gettempdir(), f"{base_file_name}.csv")
+            df.to_csv(csv_path, index=False)
 
             # Clean up uploaded file content from memory
             del content
 
             # Function to clean up temporary files
             def cleanup_temp_files():
-                os.remove(temp_xlsx_file_path)
-                os.remove(temp_csv_file_path)
+                os.remove(excel_path)
+                os.remove(csv_path)
 
             cleanup_temp_files()
 
             # Provide download buttons for the EXCEL and CSV files
-            st.download_button("Download Excel", data=excel_content, file_name=f"{base_file_name}.xlsx")
-            st.download_button("Download CSV", data=csv_content, file_name=f"{base_file_name}.csv")
+            st.download_button("Download Excel", data=excel_path, file_name=f"{base_file_name}.xlsx")
+            st.download_button("Download CSV", data=csv_path, file_name=f"{base_file_name}.csv")
         else:
             st.write("Pattern not found.")
     else:
