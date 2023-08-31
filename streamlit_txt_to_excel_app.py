@@ -74,7 +74,7 @@ if st.button("Convert"):
         df = df[~df['Subcuenta'].isin(specific_values_to_drop)]
         dropped_rows_subcuenta = initial_rows_subcuenta - df.shape[0]
         st.write(f"    - Eliminated entries for 'Subcuenta' values*: **{dropped_rows_subcuenta}**")
-        st.write(f"    * 'Subcuenta' values to drop: {', '.join(map(str, specific_values_to_drop))}")
+        st.write(f"        ('Subcuenta' values to drop: {', '.join(map(str, specific_values_to_drop)))}")
 
 
         # Final df length after dropping rows
