@@ -57,7 +57,12 @@ if st.button("Convert"):
             df.loc[row, 'Num Centro'] = df.loc[row, 'Cuenta_Total'][5:12]
             df.loc[row, 'Cuenta'] = df.loc[row, 'Cuenta_Total'][13:17]
             # Extract and convert to integer
-            df.loc[row, 'Subcuenta'] = df.loc[row, 'Cuenta_Total'][18:24].astype(int)
+            subcuenta_str = df.loc[row, 'Cuenta_Total'][18:24]
+            df.loc[row, 'Subcuenta'] = int(subcuenta_str) if subcuenta_str.isdigit() else subcuenta_str
+            
+            
+            # Extract and convert to integer
+            #df.loc[row, 'Subcuenta'] = df.loc[row, 'Cuenta_Total'][18:24].astype(int)
             
         # Original df length
         original_length = len(df)
