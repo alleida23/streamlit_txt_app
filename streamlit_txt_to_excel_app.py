@@ -78,9 +78,9 @@ if st.button("Convert"):
         #st.write(f"Eliminated entries in 'Subcuenta' values: **{dropped_rows_subcuenta}**")
 
         # Print Filters
-        st.write(f"Filters:")
-        st.write(f"- 'Account' values to drop: account number <= 5000")
-        st.write(f"- 'Subcuenta' values to drop: {', '.join(map(str, specific_values_to_drop))}")
+        st.write(f"Exclusion criteria:")
+        st.write(f"- 'Account' number <= 5000")
+        st.write(f"- 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}")
 
         # Print Eliminated Entries
         st.write(f"Eliminated entries:")
