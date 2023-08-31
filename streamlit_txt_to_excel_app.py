@@ -83,8 +83,9 @@ if st.button("Convert"):
         st.write(f"- 'Subcuenta' values to drop: {', '.join(map(str, specific_values_to_drop))}")
 
         # Print Eliminated Entries
-        st.write(f"Eliminated entries in 'Account': **{dropped_rows_account}**")
-        st.write(f"Eliminated entries in 'Subcuenta': **{dropped_rows_subcuenta}**")
+        st.write(f"Eliminated entries:")
+        st.write(f"- In 'Account': **{dropped_rows_account}**")
+        st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
 
         # Final df length after dropping rows
         final_length = len(df)
