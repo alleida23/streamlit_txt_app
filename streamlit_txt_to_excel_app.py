@@ -67,14 +67,15 @@ if st.button("Convert"):
         df = df[df['Account'].astype(int) > 5000]
         dropped_rows_account = initial_rows_account - df.shape[0]
         st.write(f"    - Eliminated entries where 'Account' number <= 5000: **{dropped_rows_account}**")
+        st.write(f"        - ('Account' values to drop: <= 5000")
 
         # Drop rows from 'Subcuenta' column with specific values
         specific_values_to_drop = ['184812', '184650', '184902', '184716', '184760', '184761']
         initial_rows_subcuenta = df.shape[0]
         df = df[~df['Subcuenta'].isin(specific_values_to_drop)]
         dropped_rows_subcuenta = initial_rows_subcuenta - df.shape[0]
-        st.write(f"    - Eliminated entries for 'Subcuenta' values*: **{dropped_rows_subcuenta}**")
-        st.write(f"        ('Subcuenta' values to drop: {', '.join(map(str, specific_values_to_drop))})")
+        st.write(f"    - Eliminated entries for 'Subcuenta' values: **{dropped_rows_subcuenta}**")
+        st.write(f"        - ('Subcuenta' values to drop: {', '.join(map(str, specific_values_to_drop))})")
 
 
         # Final df length after dropping rows
