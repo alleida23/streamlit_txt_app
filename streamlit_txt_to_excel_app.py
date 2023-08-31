@@ -91,10 +91,6 @@ if st.button("Convert"):
             year = match.group(2)
             base_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}"
 
-            # Generate EXCEL content
-            excel_path = os.path.join(tempfile.gettempdir(), f"{base_file_name}.xlsx")
-            df.to_excel(excel_path, index=False)
-
             # Generate CSV content
             csv_path = os.path.join(tempfile.gettempdir(), f"{base_file_name}.csv")
             df.to_csv(csv_path, index=False)
@@ -104,13 +100,11 @@ if st.button("Convert"):
 
             # Function to clean up temporary files
             def cleanup_temp_files():
-                os.remove(excel_path)
                 os.remove(csv_path)
 
             cleanup_temp_files()
 
-            # Provide download buttons for the EXCEL and CSV files
-            st.download_button("Download Excel", data=excel_path, file_name=f"{base_file_name}.xlsx")
+            # Provide download button for the CSV file
             st.download_button("Download CSV", data=csv_path, file_name=f"{base_file_name}.csv")
         else:
             st.write("Pattern not found.")
