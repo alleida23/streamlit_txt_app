@@ -62,9 +62,9 @@ if st.button("Convert"):
         original_length = len(df)
         st.write(f"Initial number of accounting entries: {original_length}.")
         
-        # Drop rows from 'Account' column with values >= 5000
+        # Drop rows from 'Account' column with values <= 5000
         initial_rows_account = df.shape[0]
-        df = df[df['Account'].astype(int) < 5000]
+        df = df[df['Account'].astype(int) > 5000]
         dropped_rows_account = initial_rows_account - df.shape[0]
         st.write(f"Eliminated {dropped_rows_account} accounting entries where 'Account' <= 5000.")
 
