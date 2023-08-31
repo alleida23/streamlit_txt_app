@@ -60,7 +60,7 @@ if st.button("Convert"):
             
         # Original df length
         original_length = len(df)
-        st.write(f"Initial number of accounting entries: {original_length}.")
+        st.write(f"Initial number of accounting entries: **{original_length}**")
         
         # Drop rows from 'Account' column with values <= 5000
         initial_rows_account = df.shape[0]
@@ -73,12 +73,12 @@ if st.button("Convert"):
         initial_rows_subcuenta = df.shape[0]
         df = df[~df['Subcuenta'].isin(specific_values_to_drop)]
         dropped_rows_subcuenta = initial_rows_subcuenta - df.shape[0]
-        st.write(f"    - Eliminated accounting entries for 'Subcuenta' values ( {', '.join(map(str, specific_values_to_drop)))}: {dropped_rows_subcuenta} ")
+        st.write(f"    - Eliminated accounting entries for 'Subcuenta' values ({', '.join(map(str, specific_values_to_drop))}): **{dropped_rows_subcuenta}**")
 
 
         # Final df length after dropping rows
         final_length = len(df)
-        st.write(f"Number of accounting entries after dropping rows: {final_length}.")
+        st.write(f"Number of accounting entries after dropping rows: **{final_length}**")
 
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
