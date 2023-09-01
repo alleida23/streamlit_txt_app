@@ -151,19 +151,20 @@ if st.button("Convert") or st.session_state.conversion_done:
             # Provide download buttons for the EXCEL and CSV files
             st.download_button("Download Full TBD (Excel)", data=excel_content, file_name=f"{base_file_name}.xlsx")
             st.download_button("Download Full TBD (CSV)", data=csv_content, file_name=f"{base_file_name}.csv")
-            st.write(f"Total number of accounting entries: {len(df)}")
+            st.write(f"Full TBD accounting entries: {len(df)}")
             st.write(f" ")
 
             st.write(f" ")
             st.write(f"**Filtered TBD file**")
             st.write(f"Accounts included: 5430, 8200, 8207, 8210, 8500, 8828, 8886, 8250")
+            st.write(f"Subcuentas excluded: 184812, 184650, 184902, 184716, 184760, 184761")
 
             # Provide download buttons for the EXCEL and CSV files (filtered_df)
             st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
             st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
             st.write(f"Eliminated entries: 'Account': **{dropped_rows_account}** / 'Subcuenta': **{dropped_rows_subcuenta}**")
             st.write(f" ")
-            st.write(f"Final number of accounting entries: {final_length}")
+            st.write(f"Cuentas Provisiones accounting entries: {final_length}")
             st.write(f" ")
 
             # Set the conversion_done session state variable to True
