@@ -139,6 +139,7 @@ if st.button("Convert"):
             cleanup_temp_files()
 
             # Filtered TBD
+            st.write(f" ")
             st.write(f"**Full TBD file**")
             
             # Provide download buttons for the EXCEL and CSV files
@@ -148,8 +149,15 @@ if st.button("Convert"):
             st.write(f" ")
             
             # Filtered TBD
-            st.write(f"**Filtered TBD file**")
             st.write(f" ")
+            st.write(f"**Filtered TBD file**")
+
+            # Provide download buttons for the EXCEL and CSV files (filtered_df)
+            st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
+            st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
+            st.write(f"**Final number of accounting entries: {final_length}**")
+            st.write(f" ")
+            
             #st.write(f"**Initial number of accounting entries: {original_length}**")
         
             # Print Filters
@@ -162,10 +170,7 @@ if st.button("Convert"):
             st.write(f"- In 'Account': **{dropped_rows_account}**")
             st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
             
-            # Provide download buttons for the EXCEL and CSV files (filtered_df)
-            st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
-            st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
-            st.write(f"**Final number of accounting entries: {final_length}**")
+
         else:
             st.write("Pattern not found.")
     else:
