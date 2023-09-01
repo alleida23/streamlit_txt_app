@@ -175,8 +175,14 @@ if st.button("Clean"):
         for file_path in temp_files.values():
             os.remove(file_path)
         st.write("Temporary files cleaned.")
+        
+        # Reset the 'uploaded_file' variable to remove the file from "Browse files"
+        uploaded_file = None
+
+        # Reset the app by clearing session state variables
+        st.session_state.clear()
     else:
         st.write("No temporary files to clean.")
     
     # Reset the app by clearing session state variables
-    st.session_state.clear()
+    #st.session_state.clear()
