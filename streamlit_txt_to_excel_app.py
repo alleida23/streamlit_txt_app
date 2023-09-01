@@ -63,19 +63,17 @@ if st.button("Convert"):
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
 
-
-        
         # Prepare filtered dataframe (second file to download)
         df_filtered = df.copy()
 
         # Original df length
         original_length = len(df_filtered)
-        
+
         # Drop rows from 'Account' column with values <= 5000
         initial_rows_account = df_filtered.shape[0]
         df_filtered = df_filtered[df_filtered['Account'].astype(int) > 5000]
         dropped_rows_account = initial_rows_account - df_filtered.shape[0]
-        
+
         # Drop rows from 'Subcuenta' column with specific values
         specific_values_to_drop = ['184812', '184650', '184902', '184716', '184760', '184761']
         initial_rows_subcuenta = df_filtered.shape[0]
@@ -85,8 +83,6 @@ if st.button("Convert"):
         # Final df length after dropping rows
         final_length = len(df_filtered)
 
-        
-        
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
         df['Compañía'] = df['Compañía'].astype(str)
@@ -141,14 +137,13 @@ if st.button("Convert"):
             # Filtered TBD
             st.write(f" ")
             st.write(f"**Full TBD file**")
-            
+
             # Provide download buttons for the EXCEL and CSV files
             st.download_button("Download Full TBD (Excel)", data=excel_content, file_name=f"{base_file_name}.xlsx")
             st.download_button("Download Full TBD (CSV)", data=csv_content, file_name=f"{base_file_name}.csv")
             st.write(f"Total number of accounting entries: {len(df)}")
             st.write(f" ")
-            
-            # Filtered TBD
+
             st.write(f" ")
             st.write(f"**Filtered TBD file**")
 
@@ -157,15 +152,20 @@ if st.button("Convert"):
             st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
             st.write(f"Final number of accounting entries: {final_length}")
             st.write(f" ")
-            
-        
+
             # Print Eliminated Entries
             st.write(f"Eliminated entries: 'Account': **{dropped_rows_account}** / 'Subcuenta': **{dropped_rows_subcuenta}**")
-            #st.write(f"- In 'Account': **{dropped_rows_account}**")
-            #st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
-            
-
         else:
             st.write("Pattern not found.")
     else:
         st.write("Upload a TXT file to convert.")
+
+# Clean button to remove temporary files
+if st.button("Clean"):
+    if hasattr(st.session_state, 'temp_files'):
+        temp_files = st.session_state.temp_files
+        for file_path in temp_files.values():
+            os.remove(file_path)
+        st.write("Temporary files cleaned.")
+    else:
+        st.write("No temporary files to clean.")
