@@ -10,8 +10,12 @@ st.title("Trial Balance Data Converter")
 # File uploader for TXT file
 uploaded_file = st.file_uploader("Upload a TXT File", type=["txt"])
 
+# Initialize a session state variable to track if conversion has been done
+if "conversion_done" not in st.session_state:
+    st.session_state.conversion_done = False
+
 # Convert button
-if st.button("Convert"):
+if st.button("Convert") or st.session_state.conversion_done:
     if uploaded_file is not None:
         # Read the content of the uploaded TXT file
         content = uploaded_file.read().decode("utf-8")
@@ -155,6 +159,10 @@ if st.button("Convert"):
 
             # Print Eliminated Entries
             st.write(f"Eliminated entries: 'Account': **{dropped_rows_account}** / 'Subcuenta': **{dropped_rows_subcuenta}**")
+
+            # Set the conversion_done session state variable to True
+            st.session_state.conversion_done = True
+
         else:
             st.write("Pattern not found.")
     else:
