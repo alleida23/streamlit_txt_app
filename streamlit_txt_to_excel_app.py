@@ -57,25 +57,32 @@ if st.button("Convert"):
             df.loc[row, 'Num Centro'] = df.loc[row, 'Cuenta_Total'][5:12]
             df.loc[row, 'Cuenta'] = df.loc[row, 'Cuenta_Total'][13:17]
             df.loc[row, 'Subcuenta'] = df.loc[row, 'Cuenta_Total'][18:24]
-            
+
+        # Drop unnecessary column and reorder columns
+        df = df.drop('Cuenta_Total', axis=1)
+        df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
+                 'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
+
+        
+        """ Prepare second file to download, this time filtering some 'Account' and 'Subcuenta' values """
+        
+        # Prepare filtered dataframe (second file to download)
+        df_filtered = df.copy()
+        
         # Original df length
-        original_length = len(df)
+        original_length = len(df_filtered)
         st.write(f"**Initial number of accounting entries: {original_length}**")
         
         # Drop rows from 'Account' column with values <= 5000
-        initial_rows_account = df.shape[0]
-        df = df[df['Account'].astype(int) > 5000]
-        dropped_rows_account = initial_rows_account - df.shape[0]
-        #st.write(f"- 'Account' values to drop: account number <= 5000")
-        #st.write(f"Eliminated entries in 'Account': **{dropped_rows_account}**")
+        initial_rows_account = df_filtered.shape[0]
+        df_filtered = df_filtered[df_filtered['Account'].astype(int) > 5000]
+        dropped_rows_account = initial_rows_account - df_filtered.shape[0]
         
         # Drop rows from 'Subcuenta' column with specific values
         specific_values_to_drop = ['184812', '184650', '184902', '184716', '184760', '184761']
-        initial_rows_subcuenta = df.shape[0]
-        df = df[~df['Subcuenta'].isin(specific_values_to_drop)]
-        dropped_rows_subcuenta = initial_rows_subcuenta - df.shape[0]
-        #st.write(f"- 'Subcuenta' values to drop: {', '.join(map(str, specific_values_to_drop))}")
-        #st.write(f"Eliminated entries in 'Subcuenta' values: **{dropped_rows_subcuenta}**")
+        initial_rows_subcuenta = df_filtered.shape[0]
+        df_filtered = df_filtered[~df_filtered['Subcuenta'].isin(specific_values_to_drop)]
+        dropped_rows_subcuenta = initial_rows_subcuenta - df_filtered.shape[0]
 
         # Print Filters
         st.write(f"Exclusion criteria:")
@@ -88,7 +95,7 @@ if st.button("Convert"):
         st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
 
         # Final df length after dropping rows
-        final_length = len(df)
+        final_length = len(df_filtered)
         st.write(f" ")
         st.write(f"**Final number of accounting entries: {final_length}**")
 
@@ -99,11 +106,6 @@ if st.button("Convert"):
         df['Cuenta'] = df['Cuenta'].astype(str)
         df['Subcuenta'] = df['Subcuenta'].astype(str)
 
-        # Drop unnecessary column and reorder columns
-        df = df.drop('Cuenta_Total', axis=1)
-        df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
-                 'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
-
         # Search for date pattern in TXT content
         match = re.search(r'Fecha: \d{2}-([A-Z]+)-(\d{4}) \d{2}:\d{2}', content)
 
@@ -111,12 +113,15 @@ if st.button("Convert"):
             month = match.group(1)
             year = match.group(2)
             base_file_name = f"FORMATED_Trial_Balance_Detail_{month}_{year}"
+            provisiones_file_name = f"Filtered_Cuentas_Provisiones_{month}_{year}"
 
             # Generate EXCEL content
             excel_content = df.to_csv(index=False)
+            filtered_excel_content = df_filtered.to_csv(index=False)
 
             # Generate CSV content
             csv_content = df.to_csv(index=False)
+            filtered_csv_content = df_filtered.to_csv(index=False)
 
             # Create temporary files to store EXCEL and CSV content
             with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_xlsx_file, \
@@ -126,6 +131,13 @@ if st.button("Convert"):
                 temp_xlsx_file_path = temp_xlsx_file.name
                 temp_csv_file_path = temp_csv_file.name
 
+            with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".xlsx") as temp_xlsx_file_filtered, \
+                 tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".csv") as temp_csv_file_filtered:
+                temp_xlsx_file_filtered.write(filtered_excel_content)
+                temp_csv_file_filtered.write(filtered_csv_content)
+                temp_xlsx_file_path_filtered = temp_xlsx_file_filtered.name
+                temp_csv_file_path_filtered = temp_csv_file_filtered.name
+
             # Clean up uploaded file content from memory
             del content
 
@@ -133,12 +145,17 @@ if st.button("Convert"):
             def cleanup_temp_files():
                 os.remove(temp_xlsx_file_path)
                 os.remove(temp_csv_file_path)
+                os.remove(temp_xlsx_file_path_filtered)
+                os.remove(temp_csv_file_path_filtered)
 
             cleanup_temp_files()
 
             # Provide download buttons for the EXCEL and CSV files
-            st.download_button("Download Excel", data=excel_content, file_name=f"{base_file_name}.xlsx")
-            st.download_button("Download CSV", data=csv_content, file_name=f"{base_file_name}.csv")
+            st.download_button("Download Full TBD (Excel)", data=excel_content, file_name=f"{base_file_name}.xlsx")
+            st.download_button("Download Full TBD (CSV)", data=csv_content, file_name=f"{base_file_name}.csv")
+            st.write(f" ")
+            st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{filtered_base_file_name}.xlsx")
+            st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{filtered_base_file_name}.csv")
         else:
             st.write("Pattern not found.")
     else:
