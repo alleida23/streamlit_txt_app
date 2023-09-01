@@ -156,6 +156,7 @@ if st.button("Convert") or st.session_state.conversion_done:
 
             st.write(f" ")
             st.write(f"**Filtered TBD file**")
+            st.write(f"Accounts included: 5430, 8200, 8207, 8210, 8500, 8828, 8886, 8250")
 
             # Provide download buttons for the EXCEL and CSV files (filtered_df)
             st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
