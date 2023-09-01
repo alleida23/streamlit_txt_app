@@ -74,8 +74,14 @@ if st.button("Convert") or st.session_state.conversion_done:
         original_length = len(df_filtered)
 
         # Drop rows from 'Account' column with values <= 5000
+        #initial_rows_account = df_filtered.shape[0]
+        #df_filtered = df_filtered[df_filtered['Account'].astype(int) > 5000]
+        #dropped_rows_account = initial_rows_account - df_filtered.shape[0]
+
+        # Keep rows from 'Subcuenta' column with specific values
+        specific_values_to_keep = ['5430','8200','8207','8210','8500','8828','8886','8250']
         initial_rows_account = df_filtered.shape[0]
-        df_filtered = df_filtered[df_filtered['Account'].astype(int) > 5000]
+        df_filtered = df_filtered[df_filtered['Account'].isin(specific_values_to_keep)]
         dropped_rows_account = initial_rows_account - df_filtered.shape[0]
 
         # Drop rows from 'Subcuenta' column with specific values
