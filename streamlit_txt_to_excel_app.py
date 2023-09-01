@@ -168,7 +168,7 @@ if st.button("Convert") or st.session_state.conversion_done:
     else:
         st.write("Upload a TXT file to convert.")
 
-# Clean button to remove temporary files
+# Clean button to remove temporary files and reset the app
 if st.button("Clean"):
     if hasattr(st.session_state, 'temp_files'):
         temp_files = st.session_state.temp_files
@@ -177,3 +177,6 @@ if st.button("Clean"):
         st.write("Temporary files cleaned.")
     else:
         st.write("No temporary files to clean.")
+    
+    # Reset the app by clearing session state variables
+    st.session_state.clear()
