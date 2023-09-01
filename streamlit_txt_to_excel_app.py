@@ -158,17 +158,11 @@ if st.button("Convert"):
             st.write(f"Final number of accounting entries: {final_length}")
             st.write(f" ")
             
-            #st.write(f"**Initial number of accounting entries: {original_length}**")
-        
-            # Print Filters
-            #st.write(f"Exclusion criteria:")
-            #st.write(f"- 'Account' number <= 5000")
-            #st.write(f"- 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}")
         
             # Print Eliminated Entries
-            st.write(f"Eliminated entries:")
-            st.write(f"- In 'Account': **{dropped_rows_account}**")
-            st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
+            st.write(f"Eliminated entries: 'Account': **{dropped_rows_account}** / 'Subcuenta': **{dropped_rows_subcuenta}**")
+            #st.write(f"- In 'Account': **{dropped_rows_account}**")
+            #st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
             
 
         else:
