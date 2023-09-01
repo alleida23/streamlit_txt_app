@@ -154,8 +154,8 @@ if st.button("Convert"):
             st.download_button("Download Full TBD (Excel)", data=excel_content, file_name=f"{base_file_name}.xlsx")
             st.download_button("Download Full TBD (CSV)", data=csv_content, file_name=f"{base_file_name}.csv")
             st.write(f" ")
-            st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{filtered_base_file_name}.xlsx")
-            st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{filtered_base_file_name}.csv")
+            st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
+            st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
         else:
             st.write("Pattern not found.")
     else:
