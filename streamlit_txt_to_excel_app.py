@@ -62,16 +62,13 @@ if st.button("Convert"):
         df = df.drop('Cuenta_Total', axis=1)
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
-
-        
-        """ Prepare second file to download, this time filtering some 'Account' and 'Subcuenta' values """
         
         # Prepare filtered dataframe (second file to download)
         df_filtered = df.copy()
         
         # Original df length
         original_length = len(df_filtered)
-        st.write(f"**Initial number of accounting entries: {original_length}**")
+        
         
         # Drop rows from 'Account' column with values <= 5000
         initial_rows_account = df_filtered.shape[0]
@@ -84,20 +81,8 @@ if st.button("Convert"):
         df_filtered = df_filtered[~df_filtered['Subcuenta'].isin(specific_values_to_drop)]
         dropped_rows_subcuenta = initial_rows_subcuenta - df_filtered.shape[0]
 
-        # Print Filters
-        st.write(f"Exclusion criteria:")
-        st.write(f"- 'Account' number <= 5000")
-        st.write(f"- 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}")
-
-        # Print Eliminated Entries
-        st.write(f"Eliminated entries:")
-        st.write(f"- In 'Account': **{dropped_rows_account}**")
-        st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
-
         # Final df length after dropping rows
         final_length = len(df_filtered)
-        st.write(f" ")
-        st.write(f"**Final number of accounting entries: {final_length}**")
 
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
@@ -154,6 +139,27 @@ if st.button("Convert"):
             st.download_button("Download Full TBD (Excel)", data=excel_content, file_name=f"{base_file_name}.xlsx")
             st.download_button("Download Full TBD (CSV)", data=csv_content, file_name=f"{base_file_name}.csv")
             st.write(f" ")
+            
+            # Filtered TBD
+            st.write(f"**Filtered TBD file**")
+            st.write(f" ")
+            st.write(f"**Initial number of accounting entries: {original_length}**")
+        
+            # Print Filters
+            st.write(f"Exclusion criteria:")
+            st.write(f"- 'Account' number <= 5000")
+            st.write(f"- 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}")
+        
+            # Print Eliminated Entries
+            st.write(f"Eliminated entries:")
+            st.write(f"- In 'Account': **{dropped_rows_account}**")
+            st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
+        
+            # Final df length
+            st.write(f" ")
+            st.write(f"**Final number of accounting entries: {final_length}**")
+
+            # Provide download buttons for the EXCEL and CSV files (filtered_df)
             st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
             st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
         else:
