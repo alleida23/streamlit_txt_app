@@ -161,11 +161,10 @@ if st.button("Convert") or st.session_state.conversion_done:
             # Provide download buttons for the EXCEL and CSV files (filtered_df)
             st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
             st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
+            st.write(f"Eliminated entries: 'Account': **{dropped_rows_account}** / 'Subcuenta': **{dropped_rows_subcuenta}**")
+            st.write(f" ")
             st.write(f"Final number of accounting entries: {final_length}")
             st.write(f" ")
-
-            # Print Eliminated Entries
-            st.write(f"Eliminated entries: 'Account': **{dropped_rows_account}** / 'Subcuenta': **{dropped_rows_subcuenta}**")
 
             # Set the conversion_done session state variable to True
             st.session_state.conversion_done = True
