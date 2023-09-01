@@ -153,22 +153,19 @@ if st.button("Convert"):
             #st.write(f"**Initial number of accounting entries: {original_length}**")
         
             # Print Filters
-            st.write(f"Exclusion criteria:")
-            st.write(f"- 'Account' number <= 5000")
-            st.write(f"- 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}")
+            #st.write(f"Exclusion criteria:")
+            #st.write(f"- 'Account' number <= 5000")
+            #st.write(f"- 'Subcuenta' values: {', '.join(map(str, specific_values_to_drop))}")
         
             # Print Eliminated Entries
             st.write(f"Eliminated entries:")
             st.write(f"- In 'Account': **{dropped_rows_account}**")
             st.write(f"- In 'Subcuenta': **{dropped_rows_subcuenta}**")
-        
-            # Final df length
-            st.write(f" ")
-            st.write(f"**Final number of accounting entries: {final_length}**")
-
+            
             # Provide download buttons for the EXCEL and CSV files (filtered_df)
             st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
             st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
+            st.write(f"**Final number of accounting entries: {final_length}**")
         else:
             st.write("Pattern not found.")
     else:
