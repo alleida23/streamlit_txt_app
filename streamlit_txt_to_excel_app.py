@@ -155,7 +155,7 @@ if st.button("Convert"):
             # Provide download buttons for the EXCEL and CSV files (filtered_df)
             st.download_button("Download Cuentas Provisiones (Excel)", data=filtered_excel_content, file_name=f"{provisiones_file_name}.xlsx")
             st.download_button("Download Cuentas Provisiones (CSV)", data=filtered_csv_content, file_name=f"{provisiones_file_name}.csv")
-            st.write(f"**Final number of accounting entries: {final_length}**")
+            st.write(f"Final number of accounting entries: {final_length}")
             st.write(f" ")
             
             #st.write(f"**Initial number of accounting entries: {original_length}**")
