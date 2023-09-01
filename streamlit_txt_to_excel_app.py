@@ -62,13 +62,14 @@ if st.button("Convert"):
         df = df.drop('Cuenta_Total', axis=1)
         df = df[['Account', 'Descripción', 'Compañía', 'Num Centro', 'Cuenta', 'Subcuenta',
                  'Saldo Inicial', 'Actividad Período', 'Saldo Final']]
+
+
         
         # Prepare filtered dataframe (second file to download)
         df_filtered = df.copy()
-        
+
         # Original df length
         original_length = len(df_filtered)
-        
         
         # Drop rows from 'Account' column with values <= 5000
         initial_rows_account = df_filtered.shape[0]
@@ -84,6 +85,8 @@ if st.button("Convert"):
         # Final df length after dropping rows
         final_length = len(df_filtered)
 
+        
+        
         # Convert 'Account', 'Compañía', 'Num Centro', 'Cuenta', and 'Subcuenta' columns to string/object
         df['Account'] = df['Account'].astype(str)
         df['Compañía'] = df['Compañía'].astype(str)
@@ -135,15 +138,19 @@ if st.button("Convert"):
 
             cleanup_temp_files()
 
+            # Filtered TBD
+            st.write(f"**Full TBD file**")
+            
             # Provide download buttons for the EXCEL and CSV files
             st.download_button("Download Full TBD (Excel)", data=excel_content, file_name=f"{base_file_name}.xlsx")
             st.download_button("Download Full TBD (CSV)", data=csv_content, file_name=f"{base_file_name}.csv")
+            st.write(f"Total number of accounting entries: {len(df)}")
             st.write(f" ")
             
             # Filtered TBD
             st.write(f"**Filtered TBD file**")
             st.write(f" ")
-            st.write(f"**Initial number of accounting entries: {original_length}**")
+            #st.write(f"**Initial number of accounting entries: {original_length}**")
         
             # Print Filters
             st.write(f"Exclusion criteria:")
