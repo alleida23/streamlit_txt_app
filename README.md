@@ -1,50 +1,50 @@
 # Trial Balance Data Converter
 Albert Lleida Estival, August 2023.
 
-This is a straightforward Streamlit application that converts a specific format TXT file into an Excel (xlsx) file.
+This is a Streamlit application designed to convert a specific format TXT file into CSV files. Additionally, it now includes a feature to filter the data based on specific account and subcuenta values.
 
 ## How the App Works
-
 1. Launch the app.
 2. Utilize the provided file uploader to upload a TXT file.
 3. Click the "Convert" button to initiate the processing of the uploaded file.
-4. If the TXT file adheres to the required pattern, it will be processed and transformed into an Excel (xlsx) file.
-5. You can then download the resulting Excel (xlsx) file, which will be named based on the date information extracted from the TXT file.
+   - If the TXT file adheres to the required pattern, it will be processed and transformed into CSV files.
+   - The original data will be processed into a DataFrame, and a filtered version of the data will also be generated based on specified account and subcuenta values.
+4. You can then download the resulting CSV files:
+   - One containing the full data, named based on date information extracted from the TXT file.
+   - Another containing the filtered data, named accordingly.
 
 ## App Workflow
-The app begins with a title and a file uploader designed for uploading TXT files.
+The app starts with a title and a file uploader for TXT files. When the "Convert" button is clicked:
 
-After selecting a file, simply click the "Convert" button to set the processing in motion.
-
-When the file follows the recognized pattern, its data is transformed into a DataFrame and subsequently subjected to further processing.
-
-During this processing, new columns are generated, populated, and formatted within the DataFrame.
-
-The processed data is eventually saved as an Excel (xlsx) file. You can access this file using the "Download Excel (xlsx)" button.
+- The uploaded TXT file is read, and its data is parsed and processed into a DataFrame.
+- The data is transformed and cleaned.
+- Two CSV files are generated: one with the full data and another with filtered data.
+- Temporary files are created to store the CSV files, which are available for download.
 
 ## Code Details
-Noteworthy code adjustments include:
+Noteworthy code adjustments and features include:
 
-- Integration of the function cleanup_temp_file() to handle the removal of temporary Excel (xlsx) files once they are no longer required.
-- Clearing the memory of the uploaded TXT file's content via del content, a step that helps conserve system resources.
-- Dynamic generation of Excel (xlsx) file names, using the date pattern extracted from the TXT content, when the user opts to download the file.
+- Parsing and processing of TXT file data.
+- Filtering data based on specific account and subcuenta values.
+- Temporary file management for CSV file generation.
 
 ## Requirements
 The app relies on the following Python libraries:
 
-  - Streamlit
-  - Pandas
-  - re
-  - tempfile
-  - os
+- Streamlit
+- Pandas
+- re
+- tempfile
+- os
 
 ## Limitations
-It's vital that any TXT files you intend to convert adhere to the specified format. Please ensure your files conform to this required pattern.
+Please keep in mind the following limitations:
 
-The app's file processing hinges on regular expressions. Incorrect detection of the pattern might lead to failed conversions.
+- The app's file processing relies on regular expressions. Incorrect detection of the pattern might lead to failed conversions.
+- Ensure you have sufficient available disk space and memory to accommodate the processing and creation of CSV files.
+- The app provides the option to clean up temporary files, but ensure you have the necessary permissions and resources in place.
 
-Be certain you have sufficient available disk space and memory to accommodate the processing and creation of Excel (xlsx) files.
-
-Remember that while the app takes care of temporary file management during conversion, it's important to have the necessary permissions and resources in place.
-
+## Troubleshooting
 For additional help or troubleshooting, refer to the Streamlit documentation or reach out to the app's developer.
+
+Feel free to provide additional details or update the README further based on your specific needs.
